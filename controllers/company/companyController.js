@@ -194,6 +194,7 @@ exports.registComp = (req, res) => {
 };
 
 exports.registCompNext = async (req, res) => {
+    req.session.user_id=compInfo.userId;
     // 도로명주소로 위경도 변환해서 저장
     geo.find(req.body.addr, function (err, res) {
         console.log(res[0].location["lat"]);
@@ -240,6 +241,7 @@ exports.registCompNext = async (req, res) => {
 };
 
 exports.registFinished = async (req, res) => {
+    req.session.user_id = compInfo.userId;
     res.render("compRegist/registExistCompEnd");
     Company.create({
         image: compInfo.image,
