@@ -110,74 +110,56 @@ function sendBoundAjax(url, data) {
         const result =  JSON.parse(xhr.responseText);
         closedRestaurant = result.closedRestaurantTotal;
         for(let i = 0; i < closedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedRestaurant[i].compId)){
-                    closedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedRestaurant[i].compId}`)){
+                closedRestaurant[i].isMyPlace = true;
             }
         }
         closedCafe = result.closedCafeTotal;
         for(let i = 0; i < closedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedCafe[i].compId)){
-                    closedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedCafe[i].compId}`)){
+                closedCafe[i].isMyPlace = true;
             }
         }
         closedHospital = result.closedHospitalTotal;
         for(let i = 0; i < closedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedHospital[i].compId)){
-                    closedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedHospital[i].compId}`)){
+                closedHospital[i].isMyPlace = true;
             }
         }
         todayClosedRestaurant = result.todayClosedRestaurant;
         for(let i = 0; i < todayClosedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedRestaurant[i].compId)){
-                    todayClosedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedRestaurant[i].compId}`)){
+                todayClosedRestaurant[i].isMyPlace = true;
             }
         }
         todayClosedCafe = result.todayClosedCafe;
         for(let i = 0; i < todayClosedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedCafe[i].compId)){
-                    todayClosedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedCafe[i].compId}`)){
+                todayClosedCafe[i].isMyPlace = true;
             }
         }
         todayClosedHospital = result.todayClosedHospital;
         for(let i = 0; i < todayClosedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedHospital[i].compId)){
-                    todayClosedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedHospital[i].compId}`)){
+                todayClosedHospital[i].isMyPlace = true;
             }
         }
         openedRestaurant = result.openedRestaurant;
         for(let i = 0; i < openedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedRestaurant[i].compId)){
-                    openedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedRestaurant[i].compId}`)){
+                openedRestaurant[i].isMyPlace = true;
             }
         }
         openedCafe = result.openedCafe;
         for(let i = 0; i < openedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedCafe[i].compId)){
-                    openedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedCafe[i].compId}`)){
+                openedCafe[i].isMyPlace = true;
             }
         }
         openedHospital = result.openedHospital;
         for(let i = 0; i < openedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedHospital[i].compId)){
-                    openedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedHospital[i].compId}`)){
+                openedHospital[i].isMyPlace = true;
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);
