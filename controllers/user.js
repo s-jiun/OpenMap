@@ -2,8 +2,7 @@ const models = require('./../models');
 const crypto = require('crypto');
 let session = require('express-session');
 const passport = require('passport');
-
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail')
 
 exports.getUsers = function(req, res, next) {
     res.send('respond with a resource');
@@ -193,46 +192,33 @@ exports.postFindPassword = async (req, res, next) => {
       
       models.EmailAuth.create(data); // 인증 코드 테이블에 데이터 입력
 
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        port: 465,
-        secure: true, 
-        auth: {
-          // 이메일을 보낼 계정 데이터 입력
-          user: process.env.GOOGLE_ID,
-          pass: process.env.GOOGLE_PASSWORD,
-        },
-        tls : { rejectUnauthorized: false }
-
-      });
-
-      const mailOptions = {
-        from: process.env.GOOGLE_ID, // 발송 메일 주소 
-        to: user.email, // 수신 메일 주소
-        subject: 'Password search authentication code transmission', // 제목
-        text: 'This is the authentication code to find the password!', // 내용
-        html:
-          `<p>비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.<p>` +
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      const msg = {
+        to: user.email, // Change to your recipient
+        from: process.env.GOOGLE_ID, // Change to your verified sender
+        subject: 'Password search authentication code transmission',
+        text: 'This is the authentication code to find the password!',
+        html:`<p>비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.<p>` +
           `<a href='http://localhost:3000/users/changePassword?token=${token}'>비밀번호 새로 입력하기</a>`,
-      };
+      }
+      sgMail
+        .send(msg)
+        .then(() => {
+          console.log('Email sent')
+        })
+        .catch((error) => {
+          console.error(error.body)
+        })
+            return res.render('users/speakChangePassword');
+          } else {
+            return res.status(403).send('This account does not exist');
+          }
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
+        } catch (e) {
+          // try에서 result 결과값이 null일때 catch에서 에러로 잡지 않음 이유는?..
+          res.send(e);
         }
-      });
-      return res.render('users/speakChangePassword');
-    } else {
-      return res.status(403).send('This account does not exist');
-    }
-
-  } catch (e) {
-    // try에서 result 결과값이 null일때 catch에서 에러로 잡지 않음 이유는?..
-    res.send(e);
-  }
-};
+      };
 
 exports.getChangePassword = async(req, res, next)=>{
   res.render("users/changePassword", {

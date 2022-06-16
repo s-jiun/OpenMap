@@ -225,4 +225,6 @@ $RECYCLE.BIN/
 .env
 config.json
 
-# End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,windows,macos
+sendgrid.env
+
+# End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode,windows,macossendgrid.env
