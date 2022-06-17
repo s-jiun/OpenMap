@@ -14,11 +14,11 @@ if (config.use_env_variable) {
 
 exports.setMyPlace = async (req, res) => {
     try{
-        const isMyPlace = await sequelize.query(`SELECT * FROM myplace WHERE CompanyCompId = ${req.body.compId};`, { type: QueryTypes.SELECT });
+        const isMyPlace = await sequelize.query(`SELECT * FROM MyPlace WHERE CompanyCompId = ${req.body.compId};`, { type: QueryTypes.SELECT });
         if(isMyPlace.length == 0){
-            const [results, metadata] = await sequelize.query(`INSERT INTO myplace (UserId, CompanyCompId) VALUES ('${req.session.user_id}',${req.body.compId});`);
+            const [results, metadata] = await sequelize.query(`INSERT INTO MyPlace (UserId, CompanyCompId) VALUES ('${req.session.user_id}',${req.body.compId});`);
         }else{
-            const [results, metadata] = await sequelize.query(`DELETE FROM myplace WHERE CompanyCompId = ${req.body.compId};`);
+            const [results, metadata] = await sequelize.query(`DELETE FROM MyPlace WHERE CompanyCompId = ${req.body.compId};`);
         }
 
         res.json('ok');
