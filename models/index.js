@@ -26,8 +26,6 @@ fs
     db[model.name] = model;
   });
 
-// db["Users"].belongsToMany(db["Company"], {through: db["MyPlace"]});
-// db["Company"].belongsToMany(db["Users"], {through: db["MyPlace"]});
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
