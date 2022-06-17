@@ -2,7 +2,7 @@
 
 const viewName = 'CompanyCafeView'
 const query = `select compId, image, compName, address, tel, cafeOpen, cafeClosed, cafeType, todayClosed, earlyClosed, vacation, latitude, longitude, type, mon, tue, wed, thu, fri, sat, sun 
-from company join cafe on compId=CompanyCompId`
+from Company join Cafe on compId=CompanyCompId`
 
 module.exports = {
   async up (queryInterface, Sequelize) {
