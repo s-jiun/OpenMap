@@ -19,7 +19,7 @@ if (config.use_env_variable) {
 }
 let holiday_date = [];
 
-const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+const utc = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000);
 
 const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
 
