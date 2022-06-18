@@ -49,6 +49,7 @@ request({
 
 exports.getAllPositions = async (req, res) => {
     try{
+        console.log('hour: ' + hour);
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
