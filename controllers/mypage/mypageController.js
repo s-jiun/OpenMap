@@ -29,8 +29,8 @@ exports.showMyplaceList = async(req, res) => {
     myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
     myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
-    let now = moment().format('Hmm') * 1;
-    let today = moment().format('ddd').toLowerCase;
+    let now = moment().tz("Asia/Seoul").format('Hmm') * 1;
+    let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase;
 
     myCafe.forEach(c => {
     
@@ -121,10 +121,10 @@ exports.showMyplaceList = async(req, res) => {
     for(let i=0; i < result.length; i++){
       holiday_date.push(result[i].locdate);
     }
-    let todayFor_HolidayCheck = moment().format('YYYYMMDD');
+    let todayFor_HolidayCheck = moment().tz("Asia/Seoul").format('YYYYMMDD');
     let isHoliday = holiday_date.includes(`${todayFor_HolidayCheck}`*1);
 
-    today2 = moment().format('ddd');
+    today2 = moment().tz("Asia/Seoul").format('ddd');
     
     myHosp.forEach(c => {
 
