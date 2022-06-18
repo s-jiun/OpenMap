@@ -1,9 +1,9 @@
 
 const infowindow = new kakao.maps.InfoWindow({zIndex:1});
 let init = 0;
-const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
-const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
-const opendMarkerImageSrc = "//localhost:3000/images/open.png";
+const closedMarkerImageSrc = "/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
+const holidayMarkerImageSrc = "/images/holiday.png";
+const opendMarkerImageSrc = "/images/open.png";
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
 let selectedPlace;
