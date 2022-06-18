@@ -15,7 +15,7 @@ if (config.use_env_variable) {
 exports.Initialize = async (req, res) => {
     try{
 
-        let myPlaces = await sequelize.query(`SELECT * FROM myplace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
+        let myPlaces = await sequelize.query(`SELECT * FROM MyPlace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
         let myPlaceId = [];
         myPlaces.forEach(p => {
             myPlaceId.push(p.CompanyCompId);

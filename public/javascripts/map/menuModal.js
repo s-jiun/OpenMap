@@ -23,10 +23,10 @@ $(document).on('click', '.menu', function(e) {
     }
 
     const inputdata = selectedPlace.compId;
-    sendMenuAjax('http://localhost:3000/menu-ajax', inputdata)
+    sendMenuAjax('/menu-ajax', inputdata)
 });
 
-//send함수 'http://localhost:3000/menuajax'주소에 inputdata를 보냅니다
+//send함수 '/menuajax'주소에 inputdata를 보냅니다
 function sendMenuAjax(url, data) {
 
     let ajaxData = { 'id': data };

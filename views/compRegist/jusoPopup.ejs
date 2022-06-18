@@ -3,7 +3,7 @@
   <head>
     <script> const addrservicekey = "<%= addrkey %>"</script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Insert title here</title>
+    <title>도로명주소</title>
 	<%
 	const {
 		inputYn,
@@ -48,7 +48,6 @@
         document.form.returnUrl.value = url;
         document.form.resultType.value = resultType;
         document.form.action = 'http://www.juso.go.kr/addrlink/addrLinkUrl.do'; //인터넷망
-        //document.form.action="http://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"; //모바일 웹인 경우, 인터넷망
         document.form.submit();
       } else {
         opener.jusoCallBack(

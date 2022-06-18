@@ -2,14 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     const Cafe = sequelize.define(
         "Cafe",
         {
-            // compId: {
-            //     type: DataTypes.INTEGER,
-            //     primaryKey: true,
-            //     unique: true,
-            //     allowNull: false,
-            //     comment: "업체 번호",
-            // },
-
             cafeOpen: {
                 type: DataTypes.INTEGER,
                 comment: "오픈시각",

@@ -1,9 +1,9 @@
 
 const infowindow = new kakao.maps.InfoWindow({zIndex:1});
 let init = 0;
-const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
-const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
-const opendMarkerImageSrc = "//localhost:3000/images/open.png";
+const closedMarkerImageSrc = "/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
+const holidayMarkerImageSrc = "/images/holiday.png";
+const opendMarkerImageSrc = "/images/open.png";
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
 let selectedPlace;
@@ -73,7 +73,7 @@ kakao.maps.event.addListener(map, 'dragend', function() {
     neLng = currentBounds.getNorthEast().getLng();
 
     const inputdata = {'swLat' : swLat, 'swLng' : swLng, 'neLat' : neLat, 'neLng' : neLng};
-    sendBoundAjax('http://localhost:3000/setbound-ajax', inputdata)
+    sendBoundAjax('/setbound-ajax', inputdata)
 });
 
 // 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
@@ -91,10 +91,10 @@ kakao.maps.event.addListener(map, 'zoom_changed', function() {
     neLng = currentBounds.getNorthEast().getLng();
 
     const inputdata = {'swLat' : swLat, 'swLng' : swLng, 'neLat' : neLat, 'neLng' : neLng};
-    sendBoundAjax('http://localhost:3000/setbound-ajax', inputdata)
+    sendBoundAjax('/setbound-ajax', inputdata)
 });
 
-//send함수 'http://localhost:3000/setbound-ajax'주소에 inputdata를 보냅니다
+//send함수 '/setbound-ajax'주소에 inputdata를 보냅니다
 function sendBoundAjax(url, data) {
 
     let ajaxData = data;
@@ -110,74 +110,56 @@ function sendBoundAjax(url, data) {
         const result =  JSON.parse(xhr.responseText);
         closedRestaurant = result.closedRestaurantTotal;
         for(let i = 0; i < closedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedRestaurant[i].compId)){
-                    closedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedRestaurant[i].compId}`)){
+                closedRestaurant[i].isMyPlace = true;
             }
         }
         closedCafe = result.closedCafeTotal;
         for(let i = 0; i < closedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedCafe[i].compId)){
-                    closedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedCafe[i].compId}`)){
+                closedCafe[i].isMyPlace = true;
             }
         }
         closedHospital = result.closedHospitalTotal;
         for(let i = 0; i < closedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(closedHospital[i].compId)){
-                    closedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${closedHospital[i].compId}`)){
+                closedHospital[i].isMyPlace = true;
             }
         }
         todayClosedRestaurant = result.todayClosedRestaurant;
         for(let i = 0; i < todayClosedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedRestaurant[i].compId)){
-                    todayClosedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedRestaurant[i].compId}`)){
+                todayClosedRestaurant[i].isMyPlace = true;
             }
         }
         todayClosedCafe = result.todayClosedCafe;
         for(let i = 0; i < todayClosedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedCafe[i].compId)){
-                    todayClosedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedCafe[i].compId}`)){
+                todayClosedCafe[i].isMyPlace = true;
             }
         }
         todayClosedHospital = result.todayClosedHospital;
         for(let i = 0; i < todayClosedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(todayClosedHospital[i].compId)){
-                    todayClosedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${todayClosedHospital[i].compId}`)){
+                todayClosedHospital[i].isMyPlace = true;
             }
         }
         openedRestaurant = result.openedRestaurant;
         for(let i = 0; i < openedRestaurant.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedRestaurant[i].compId)){
-                    openedRestaurant[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedRestaurant[i].compId}`)){
+                openedRestaurant[i].isMyPlace = true;
             }
         }
         openedCafe = result.openedCafe;
         for(let i = 0; i < openedCafe.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedCafe[i].compId)){
-                    openedCafe[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedCafe[i].compId}`)){
+                openedCafe[i].isMyPlace = true;
             }
         }
         openedHospital = result.openedHospital;
         for(let i = 0; i < openedHospital.length; i++){
-            for(let j=0; j < MyPlaces.length; j++){
-                if(MyPlaces.includes(openedHospital[i].compId)){
-                    openedHospital[i].isMyPlace = true;
-                }
+            if(MyPlaces.includes(`${openedHospital[i].compId}`)){
+                openedHospital[i].isMyPlace = true;
             }
         }
         companyTotal = closedCafe.concat(openedCafe, todayClosedCafe, closedRestaurant, openedRestaurant, todayClosedRestaurant, closedHospital, openedHospital, todayClosedHospital);

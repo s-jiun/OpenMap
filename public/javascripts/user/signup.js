@@ -68,7 +68,7 @@ function onSubmit() {
     
     //data에 inputdata를 json형식으로 넣고 이를 xmlhttprequest를 통해 post방식으로 보냅니다
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:3000/users/sign_up');
+    xhr.open('POST', '/users/sign_up');
     xhr.setRequestHeader('Content-type', "application/json");
     xhr.send(ajaxData);
     
@@ -97,5 +97,5 @@ function onSubmit() {
 }
 
 function applySupplier() {
-  window.location.href='/compRegist/registComp';
+  window.location.href='/compRegist';
 }
