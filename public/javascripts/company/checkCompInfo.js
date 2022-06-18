@@ -7,7 +7,6 @@ function gocheckComp() {
                 p_nm: document.getElementById('name').value,
                 p_nm2: "",
                 b_nm:"",
-                // b_nm: document.getElementById('bnm').value,
                 corp_no: "",
                 b_sector: "",
                 b_type: "",
@@ -37,13 +36,11 @@ function gocheckComp() {
 function nextFunction(valid) {
     if (valid == "01") {
         alert("사업자등록정보가 인증되었습니다.");
-        // const bnm = document.getElementById('bnm');
         const nameForm = document.getElementById('name');
         const compNumForm = document.getElementById('compNum');
         const openDateForm = document.getElementById('openDate');
         nameForm.disabled = true;
         compNumForm.disabled = true;
-        // bnm.disabled =true;
         openDateForm.disabled = true;
     } else if (valid == "02") {
         alert("사업자등록정보가 일치하지 않습니다.");

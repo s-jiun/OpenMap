@@ -199,7 +199,7 @@ exports.postFindPassword = async (req, res, next) => {
         subject: 'Password search authentication code transmission',
         text: 'This is the authentication code to find the password!',
         html:`<p>비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요.<p>` +
-          `<a href='http://localhost:3000/users/changePassword?token=${token}'>비밀번호 새로 입력하기</a>`,
+          `<a href='https://openmap.p-e.kr//users/changePassword?token=${token}'>비밀번호 새로 입력하기</a>`,
       }
       sgMail
         .send(msg)
