@@ -1,10 +1,10 @@
 //heart를 눌렀을 때 실행되는 함수
 function setMyPlace(compId) {
     const inputdata = compId;
-    sendMyPlaceAjax('http://localhost:3000/myplace-ajax', inputdata)
+    sendMyPlaceAjax('/myplace-ajax', inputdata)
 }
 
-//send함수 'http://localhost:3000/myplace-ajax'주소에 inputdata를 보냅니다
+//send함수 '/myplace-ajax'주소에 inputdata를 보냅니다
 function sendMyPlaceAjax(url, data) {
     const section = document.querySelector(`.heart-${data}`);
 

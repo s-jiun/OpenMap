@@ -18,7 +18,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 let holiday_date = [];
-let today = new Date();
+
+const utc = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000);
+
+const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+let today = new Date(utc + (KR_TIME_DIFF));
 const day = today.getDay();
 const date = today.getDate();
 let hour = today.getHours();
@@ -49,6 +54,7 @@ request({
 
 exports.getAllPositions = async (req, res) => {
     try{
+        console.log('hour: ' + hour);
         if(day == 0){
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],

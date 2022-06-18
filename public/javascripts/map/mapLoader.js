@@ -1,9 +1,9 @@
 
 const infowindow = new kakao.maps.InfoWindow({zIndex:1});
 let init = 0;
-const closedMarkerImageSrc = "//localhost:3000/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
-const holidayMarkerImageSrc = "//localhost:3000/images/holiday.png";
-const opendMarkerImageSrc = "//localhost:3000/images/open.png";
+const closedMarkerImageSrc = "/images/closed.png";  // 마커이미지의 주소입니다. 스프라이트 이미지 입니다
+const holidayMarkerImageSrc = "/images/holiday.png";
+const opendMarkerImageSrc = "/images/open.png";
 const listEl = document.getElementById('placesList');
 const menuEl = document.getElementById('slideNav');
 let selectedPlace;
@@ -73,7 +73,7 @@ kakao.maps.event.addListener(map, 'dragend', function() {
     neLng = currentBounds.getNorthEast().getLng();
 
     const inputdata = {'swLat' : swLat, 'swLng' : swLng, 'neLat' : neLat, 'neLng' : neLng};
-    sendBoundAjax('http://localhost:3000/setbound-ajax', inputdata)
+    sendBoundAjax('/setbound-ajax', inputdata)
 });
 
 // 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
@@ -91,10 +91,10 @@ kakao.maps.event.addListener(map, 'zoom_changed', function() {
     neLng = currentBounds.getNorthEast().getLng();
 
     const inputdata = {'swLat' : swLat, 'swLng' : swLng, 'neLat' : neLat, 'neLng' : neLng};
-    sendBoundAjax('http://localhost:3000/setbound-ajax', inputdata)
+    sendBoundAjax('/setbound-ajax', inputdata)
 });
 
-//send함수 'http://localhost:3000/setbound-ajax'주소에 inputdata를 보냅니다
+//send함수 '/setbound-ajax'주소에 inputdata를 보냅니다
 function sendBoundAjax(url, data) {
 
     let ajaxData = data;
