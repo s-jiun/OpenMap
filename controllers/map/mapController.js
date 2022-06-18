@@ -18,7 +18,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 let holiday_date = [];
-let today = new Date();
+
+const utc = curr.getTime() + (curr.getTimezoneOffset() * 60 * 1000);
+
+const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+
+let today = new Date(utc + (KR_TIME_DIFF));
 const day = today.getDay();
 const date = today.getDate();
 let hour = today.getHours();
