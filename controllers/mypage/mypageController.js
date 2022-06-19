@@ -30,7 +30,7 @@ exports.showMyplaceList = async(req, res) => {
     myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
     let now = moment().tz("Asia/Seoul").format('Hmm') * 1;
-    let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase;
+    let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase();
 
     myCafe.forEach(c => {
     
