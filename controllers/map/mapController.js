@@ -419,7 +419,8 @@ exports.getAllPositions = async (req, res) => {
                 },
                 restClosed:{
                     [Op.gt]: parseInt(now)
-                }
+                },
+                earlyClosed:0
             }
         });
         closedRestaurant = await CompanyRestaurantView.findAll({         // 영업마감 식당 확인
@@ -456,6 +457,7 @@ exports.getAllPositions = async (req, res) => {
                 cafeClosed:{
                     [Op.gt]: parseInt(now)
                 },
+                earlyClosed:0
             }
         });
 
@@ -493,7 +495,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseSun:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({         // 공휴일 영업 마감 병원 확인
@@ -529,7 +532,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseSun:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({         // 일요일 영업 마감 병원 확인 
@@ -565,7 +569,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseMon:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({          // 월요일 영업 마감 병원 확인 
@@ -601,7 +606,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseTue:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({         // 화요일 영업 마감 병원 확인 
@@ -637,7 +643,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseWed:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({          // 수요일 영업 마감 병원 확인 
@@ -673,7 +680,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseThu:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({          // 목요일 영업 마감 병원 확인 
@@ -709,7 +717,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseFri:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({           // 금요일 영업 마감 병원 확인 
@@ -745,7 +754,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     HospCloseSat:{
                         [Op.gt]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:0
                 }
             });
             closedHospital = await CompanyHospitalView.findAll({          // 토요일 영업 마감 병원 확인 
