@@ -14,6 +14,7 @@ if (config.use_env_variable) {
 
 exports.setMyPlace = async (req, res) => {
     try{
+        // 하트 눌렀을 때 마이플레이스 설정
         const isMyPlace = await sequelize.query(`SELECT * FROM MyPlace WHERE CompanyCompId = ${req.body.compId};`, { type: QueryTypes.SELECT });
         if(isMyPlace.length == 0){
             const [results, metadata] = await sequelize.query(`INSERT INTO MyPlace (UserId, CompanyCompId) VALUES ('${req.session.user_id}',${req.body.compId});`);

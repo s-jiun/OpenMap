@@ -15,6 +15,7 @@ if (config.use_env_variable) {
 exports.Initialize = async (req, res) => {
     try{
 
+        // 접속한 유저의 마이플레이스 불러오기
         let myPlaces = await sequelize.query(`SELECT * FROM MyPlace WHERE UserId='${req.session.user_id}';`, { type: QueryTypes.SELECT });
         let myPlaceId = [];
         myPlaces.forEach(p => {

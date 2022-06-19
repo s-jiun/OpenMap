@@ -17,8 +17,9 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-let holiday_date = [];
+let holiday_date = []; // 이번달 공휴일이 담길 리스트
 
+// 시간대를 한국으로 설정
 const utc = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000);
 
 const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
@@ -36,8 +37,10 @@ if(minute < 10){
 }
 let now = String(hour) + minute;
 
+
+// 이번달의 공휴일을 받아오는 api
 request({
-    url: `http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
+    url: `https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=${process.env.HOLIDAY_APIKEY}&solYear=${today.getFullYear()}&solMonth=0${today.getMonth()+1}&_type=json`,
     method: 'GET'
 }, async function (error, response, body) {
     try{
@@ -55,7 +58,7 @@ request({
 exports.getAllPositions = async (req, res) => {
     try{
         console.log('hour: ' + hour);
-        if(day == 0){
+        if(day == 0){   //일요일 정기휴무 식당 확인
             todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
@@ -66,10 +69,9 @@ exports.getAllPositions = async (req, res) => {
                         { sun:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({   //일요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -79,10 +81,9 @@ exports.getAllPositions = async (req, res) => {
                         { sun:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({   //일요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -92,10 +93,9 @@ exports.getAllPositions = async (req, res) => {
                         { sun:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({   // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     [Op.and]: [
@@ -106,7 +106,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 1){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({     //월요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -116,10 +116,9 @@ exports.getAllPositions = async (req, res) => {
                         { mon:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({      //월요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -129,10 +128,9 @@ exports.getAllPositions = async (req, res) => {
                         { mon:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({      //월요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -142,10 +140,9 @@ exports.getAllPositions = async (req, res) => {
                         { mon:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({     // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -158,7 +155,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 2){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({     //화요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -168,10 +165,9 @@ exports.getAllPositions = async (req, res) => {
                         { tue:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({      //화요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -181,10 +177,9 @@ exports.getAllPositions = async (req, res) => {
                         { tue:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({       //화요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -194,10 +189,9 @@ exports.getAllPositions = async (req, res) => {
                         { tue:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({     // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -210,7 +204,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 3){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({        //수요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -220,10 +214,9 @@ exports.getAllPositions = async (req, res) => {
                         { wed:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({       //수요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -233,10 +226,9 @@ exports.getAllPositions = async (req, res) => {
                         { wed:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({       //수요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'HospOpenMon', 'HospCloseMon', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -246,11 +238,10 @@ exports.getAllPositions = async (req, res) => {
                         { wed:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
-                attributes: ['compId'],
+            todayOpened = await Company.findAll({       // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
+                attributes: ['compId'], 
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
@@ -262,7 +253,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 4){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({     //목요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -272,10 +263,9 @@ exports.getAllPositions = async (req, res) => {
                         { thu:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({        //목요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -285,10 +275,9 @@ exports.getAllPositions = async (req, res) => {
                         { thu:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({        //목요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -298,10 +287,9 @@ exports.getAllPositions = async (req, res) => {
                         { thu:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({        // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -314,7 +302,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 5){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({        //금요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -324,10 +312,9 @@ exports.getAllPositions = async (req, res) => {
                         { fri:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
             });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            todayClosedCafePosition = await CompanyCafeView.findAll({         //금요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -337,10 +324,9 @@ exports.getAllPositions = async (req, res) => {
                         { fri:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({         //금요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -350,10 +336,9 @@ exports.getAllPositions = async (req, res) => {
                         { fri:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({       // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -366,7 +351,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 6){
-            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+            todayClosedRestaurantPosition = await CompanyRestaurantView.findAll({       //토요일 정기휴무 식당 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -376,10 +361,9 @@ exports.getAllPositions = async (req, res) => {
                         { sat:1 },
                         { vacation:1 }
                     ],
-                    type: 'R'
                 }
-            });
-            todayClosedCafePosition = await CompanyCafeView.findAll({
+            });  
+            todayClosedCafePosition = await CompanyCafeView.findAll({         //토요일 정기휴무 휴게음식점 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -389,10 +373,9 @@ exports.getAllPositions = async (req, res) => {
                         { sat:1 },
                         { vacation:1 }
                     ],
-                    type: 'C'
                 }
             });
-            todayClosedHospitalPosition = await CompanyHospitalView.findAll({
+            todayClosedHospitalPosition = await CompanyHospitalView.findAll({          //토요일 정기휴무 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'todayClosed', 'earlyClosed', 'vacation', 'latitude', 'longitude', 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -402,10 +385,9 @@ exports.getAllPositions = async (req, res) => {
                         { sat:1 },
                         { vacation:1 }
                     ],
-                    type: 'H'
                 }
             });
-            todayOpened = await Company.findAll({
+            todayOpened = await Company.findAll({         // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -424,97 +406,88 @@ exports.getAllPositions = async (req, res) => {
             todayOpenedCompId.push(todayOpened[i].compId);
         };
 
-        earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({
+        earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({       // 조기마감 식당 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where:{
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 earlyClosed:1,
-                type: 'R'
             }
         });
-        earlyClosedCafePosition = await CompanyCafeView.findAll({
+        earlyClosedCafePosition = await CompanyCafeView.findAll({      // 조기마감 휴게음식점 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where:{
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                 longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                 earlyClosed:1,
-                type: 'C'
             }
         });
         if(day == 0){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({       // 조기마감 병원 확인 + 일요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 1){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 월요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 2){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 화요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 3){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 수요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 4){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({        // 조기마감 병원 확인 + 목요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 5){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 금요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }else if(day == 6){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({
+            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 토요일 영업 시간 불러오기
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where:{
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
                     longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     earlyClosed:1,
-                    type: 'H'
                 }
             });
         }
 
-        openedRestaurant = await CompanyRestaurantView.findAll({
+        openedRestaurant = await CompanyRestaurantView.findAll({          // 영업중 식당 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -530,7 +503,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             }
         });
-        closedRestaurant = await CompanyRestaurantView.findAll({
+        closedRestaurant = await CompanyRestaurantView.findAll({         // 영업마감 식당 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -549,7 +522,7 @@ exports.getAllPositions = async (req, res) => {
             }
         });
 
-        openedCafe = await CompanyCafeView.findAll({
+        openedCafe = await CompanyCafeView.findAll({         // 영업중 휴게음식점 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -566,7 +539,7 @@ exports.getAllPositions = async (req, res) => {
             }
         });
 
-        closedCafe = await CompanyCafeView.findAll({
+        closedCafe = await CompanyCafeView.findAll({          // 영업 마감 휴게음식점 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
             where: {
                 latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -585,7 +558,7 @@ exports.getAllPositions = async (req, res) => {
             }
         });
 
-        if(holiday_date.includes(date)){
+        if(holiday_date.includes(date)){   // 공휴일 영업중 병원 확인
             openedHospital = await CompanyHospitalView.findAll({
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
@@ -602,7 +575,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({         // 공휴일 영업 마감 병원 확인
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenVac', 'hospitalOpen'], ['HospCloseVac', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -621,7 +594,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 0){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({         // 일요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -637,7 +610,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({         // 일요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -656,7 +629,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 1){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({         // 월요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -672,7 +645,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({          // 월요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -691,7 +664,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 2){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({          // 화요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -707,7 +680,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({         // 화요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -726,7 +699,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 3){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({          // 수요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -742,7 +715,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({          // 수요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -761,7 +734,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 4){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({         // 목요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -777,7 +750,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({          // 목요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -796,7 +769,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 5){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({          // 금요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -812,7 +785,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({           // 금요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -831,7 +804,7 @@ exports.getAllPositions = async (req, res) => {
                 }
             });
         }else if(day == 6){
-            openedHospital = await CompanyHospitalView.findAll({
+            openedHospital = await CompanyHospitalView.findAll({           // 토요일 영업중 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -847,7 +820,7 @@ exports.getAllPositions = async (req, res) => {
                     }
                 }
             });
-            closedHospital = await CompanyHospitalView.findAll({
+            closedHospital = await CompanyHospitalView.findAll({          // 토요일 영업 마감 병원 확인 
                 attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
                 where: {
                     latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
@@ -874,6 +847,8 @@ exports.getAllPositions = async (req, res) => {
         let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
         closedHospitalPositionTotal = [...closedHospital];
 
+
+        // 마커 표시를 위한 업체 영업 유형별 타입 설정, 마이플레이스 속성 설정, buffer 타입 이미지 문자열로 변환
         for(let i=0; i < todayClosedRestaurantPosition.length; i++){
             todayClosedRestaurantPosition[i].dataValues.type = 'tcr';
             todayClosedRestaurantPosition[i].dataValues.isMyPlace = false;

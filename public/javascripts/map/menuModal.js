@@ -14,7 +14,7 @@ modal.addEventListener('click', (event) => {
   }
 });
 
-//이벤트를 동적 바인딩합니다
+//이벤트를 동적 바인딩
 $(document).on('click', '.menu', function(e) {
     modal.classList.toggle('show');
 
@@ -26,19 +26,19 @@ $(document).on('click', '.menu', function(e) {
     sendMenuAjax('/menu-ajax', inputdata)
 });
 
-//send함수 '/menuajax'주소에 inputdata를 보냅니다
+//send함수 '/menuajax'주소에 inputdata를 전송
 function sendMenuAjax(url, data) {
 
     let ajaxData = { 'id': data };
     ajaxData = JSON.stringify(ajaxData);
     
-    //data에 inputdata를 json형식으로 넣고 이를 xmlhttprequest를 통해 post방식으로 보냅니다
+    //data에 inputdata를 json형식으로 넣고 이를 xmlhttprequest를 통해 post방식으로 전송
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.setRequestHeader('Content-type', "application/json");
     xhr.send(ajaxData);
     
-    //서버에서 결과가 도착하면 그것을 div에 입력합니다
+    //서버에서 결과가 도착하면 그것을 div에 입력
     xhr.addEventListener('load', function () {
         const result =  JSON.parse(xhr.responseText);
         let menuInfo = '<h2 class="title">메뉴</h2>';

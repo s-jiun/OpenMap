@@ -1,4 +1,4 @@
-function setOverlay(place, marker){
+function setOverlay(place, marker){   // 커스텀 오버레이 생성 함수
 
     if(place.type == 'cr'){
         let closeTime = Math.floor((place.restClosed)/100);
