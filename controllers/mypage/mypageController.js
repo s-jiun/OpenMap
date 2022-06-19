@@ -34,8 +34,10 @@ exports.showMyplaceList = async(req, res) => {
 
     myCafe.forEach(c => {
     
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if((now > c.cafeOpen && now < c.cafeClosed) || 
       (c.cafeClosed >=2400 && now+2400 > c.cafeOpen && now+2400 < c.cafeClosed)){
         c['status'] = '영업중'
@@ -65,8 +67,10 @@ exports.showMyplaceList = async(req, res) => {
   
     myRest.forEach(c => {
 
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if(c.breakStart && now >= c.breakStart && now <= c.breakEnd){
         c['status'] = "휴게시간";
       } else if((now > c.restOpen && now < c.restClosed) || 
@@ -139,8 +143,10 @@ exports.showMyplaceList = async(req, res) => {
       }
       
 
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if(c.breakStart && now >= c.breakStart && now <= c.breakEnd){
         c['status'] = "휴게시간";
       } else if((now > HospOpen && now < HospClosed) || 
