@@ -808,21 +808,21 @@ exports.getAllPositions = async (req, res) => {
         }
 
         for(let i=0; i < closedRestaurantPositionTotal.length; i++){
-            closedRestaurantPositionTotal[i].dataValues.type = 'cr';
-            closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
-            closedRestaurantPositionTotal[i].dataValues.image = closedRestaurant[i].dataValues.image ? closedRestaurant[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedRestaurantl[i].dataValues.type = 'cr';
+            closedRestaurant[i].dataValues.isMyPlace = false;
+            closedRestaurant[i].dataValues.image = closedRestaurant[i].dataValues.image ? closedRestaurant[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         for(let i=0; i < closedCafePositionTotal.length; i++){
-            closedCafePositionTotal[i].dataValues.type = 'cc';
-            closedCafePositionTotal[i].dataValues.isMyPlace = false;
-            closedCafePositionTotal[i].dataValues.image = closedCafe[i].dataValues.image ? closedCafe[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedCafe[i].dataValues.type = 'cc';
+            closedCafel[i].dataValues.isMyPlace = false;
+            closedCafe[i].dataValues.image = closedCafe[i].dataValues.image ? closedCafe[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         for(let i=0; i < closedHospitalPositionTotal.length; i++){
-            closedHospitalPositionTotal[i].dataValues.type = 'ch';
-            closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
-            closedHospitalPositionTotal[i].dataValues.image = closedHospital[i].dataValues.image ? closedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedHospital[i].dataValues.type = 'ch';
+            closedHospitall[i].dataValues.isMyPlace = false;
+            closedHospital[i].dataValues.image = closedHospital[i].dataValues.image ? closedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         res.json({
