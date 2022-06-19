@@ -406,87 +406,6 @@ exports.getAllPositions = async (req, res) => {
             todayOpenedCompId.push(todayOpened[i].compId);
         };
 
-        earlyClosedRestaurantPosition = await CompanyRestaurantView.findAll({       // 조기마감 식당 확인
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
-            where:{
-                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                earlyClosed:1,
-            }
-        });
-        earlyClosedCafePosition = await CompanyCafeView.findAll({      // 조기마감 휴게음식점 확인
-            attributes: ['compId', 'image', 'compName', 'address', 'tel', 'cafeOpen', 'cafeClosed', 'cafeType', 'latitude', 'longitude'],
-            where:{
-                latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                earlyClosed:1,
-            }
-        });
-        if(day == 0){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({       // 조기마감 병원 확인 + 일요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSun', 'hospitalOpen'], ['HospCloseSun', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 1){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 월요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenMon', 'hospitalOpen'], ['HospCloseMon', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 2){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 화요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenTue', 'hospitalOpen'], ['HospCloseTue', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 3){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 수요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenWed', 'hospitalOpen'], ['HospCloseWed', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 4){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({        // 조기마감 병원 확인 + 목요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenThu', 'hospitalOpen'], ['HospCloseThu', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 5){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 금요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenFri', 'hospitalOpen'], ['HospCloseFri', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }else if(day == 6){
-            earlyClosedHospitalPosition = await CompanyHospitalView.findAll({         // 조기마감 병원 확인 + 토요일 영업 시간 불러오기
-                attributes: ['compId', 'image', 'compName', 'address', 'tel', 'HospType', 'content', 'latitude', 'longitude', ['HospOpenSat', 'hospitalOpen'], ['HospCloseSat', 'hospitalClosed'], 'breakStart', 'breakEnd'],
-                where:{
-                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
-                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
-                    earlyClosed:1,
-                }
-            });
-        }
-
         openedRestaurant = await CompanyRestaurantView.findAll({          // 영업중 식당 확인
             attributes: ['compId', 'image', 'compName', 'address', 'tel', 'restType', 'restOpen', 'restClosed', 'breakStart', 'breakEnd', 'latitude', 'longitude'],
             where: {
@@ -517,7 +436,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     restClosed:{
                         [Op.lte]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:1
                 }
             }
         });
@@ -535,7 +455,7 @@ exports.getAllPositions = async (req, res) => {
                 },
                 cafeClosed:{
                     [Op.gt]: parseInt(now)
-                }
+                },
             }
         });
 
@@ -553,7 +473,8 @@ exports.getAllPositions = async (req, res) => {
                     },
                     cafeClosed:{
                         [Op.lte]: parseInt(now)
-                    }
+                    },
+                    earlyClosed:1
                 }
             }
         });
@@ -589,7 +510,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseSun:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -624,7 +546,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseSun:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -659,7 +582,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseMon:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -694,7 +618,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseTue:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -729,7 +654,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseWed:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -764,7 +690,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseThu:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -799,7 +726,8 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseFri:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
@@ -834,18 +762,12 @@ exports.getAllPositions = async (req, res) => {
                         },
                         HospCloseSat:{
                             [Op.lte]: parseInt(now)
-                        }
+                        },
+                        earlyClosed:1
                     }
                 }
             });
         }
-
-        let closedRestaurantPositionTotal = new Array(earlyClosedRestaurantPosition);
-        closedRestaurantPositionTotal = [...closedRestaurant];
-        let closedCafePositionTotal = new Array(earlyClosedCafePosition);
-        closedCafePositionTotal = [...closedCafe];
-        let closedHospitalPositionTotal = new Array(earlyClosedHospitalPosition);
-        closedHospitalPositionTotal = [...closedHospital];
 
 
         // 마커 표시를 위한 업체 영업 유형별 타입 설정, 마이플레이스 속성 설정, buffer 타입 이미지 문자열로 변환
@@ -888,25 +810,25 @@ exports.getAllPositions = async (req, res) => {
         for(let i=0; i < closedRestaurantPositionTotal.length; i++){
             closedRestaurantPositionTotal[i].dataValues.type = 'cr';
             closedRestaurantPositionTotal[i].dataValues.isMyPlace = false;
-            closedRestaurantPositionTotal[i].dataValues.image = closedRestaurantPositionTotal[i].dataValues.image ? closedRestaurantPositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedRestaurantPositionTotal[i].dataValues.image = closedRestaurant[i].dataValues.image ? closedRestaurant[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         for(let i=0; i < closedCafePositionTotal.length; i++){
             closedCafePositionTotal[i].dataValues.type = 'cc';
             closedCafePositionTotal[i].dataValues.isMyPlace = false;
-            closedCafePositionTotal[i].dataValues.image = closedCafePositionTotal[i].dataValues.image ? closedCafePositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedCafePositionTotal[i].dataValues.image = closedCafe[i].dataValues.image ? closedCafe[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         for(let i=0; i < closedHospitalPositionTotal.length; i++){
             closedHospitalPositionTotal[i].dataValues.type = 'ch';
             closedHospitalPositionTotal[i].dataValues.isMyPlace = false;
-            closedHospitalPositionTotal[i].dataValues.image = closedHospitalPositionTotal[i].dataValues.image ? closedHospitalPositionTotal[i].dataValues.image.toString() : "/images/baseimg.jpg";
+            closedHospitalPositionTotal[i].dataValues.image = closedHospital[i].dataValues.image ? closedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
         res.json({
             todayClosedRestaurant : todayClosedRestaurantPosition, todayClosedCafe :  todayClosedCafePosition, todayClosedHospital : todayClosedHospitalPosition , 
             openedRestaurant : openedRestaurant, openedCafe : openedCafe, openedHospital : openedHospital,
-            closedRestaurantTotal : closedRestaurantPositionTotal, closedCafeTotal : closedCafePositionTotal, closedHospitalTotal : closedHospitalPositionTotal,
+            closedRestaurantTotal : closedRestaurant, closedCafeTotal : closedCafe, closedHospitalTotal : closedHospital,
         });
 
     }catch(err){
