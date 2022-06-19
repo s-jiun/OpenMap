@@ -807,19 +807,19 @@ exports.getAllPositions = async (req, res) => {
             openedHospital[i].dataValues.image = openedHospital[i].dataValues.image ? openedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
-        for(let i=0; i < closedRestaurantPositionTotal.length; i++){
+        for(let i=0; i < closedRestaurant.length; i++){
             closedRestaurantl[i].dataValues.type = 'cr';
             closedRestaurant[i].dataValues.isMyPlace = false;
             closedRestaurant[i].dataValues.image = closedRestaurant[i].dataValues.image ? closedRestaurant[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
-        for(let i=0; i < closedCafePositionTotal.length; i++){
+        for(let i=0; i < closedCafe.length; i++){
             closedCafe[i].dataValues.type = 'cc';
             closedCafel[i].dataValues.isMyPlace = false;
             closedCafe[i].dataValues.image = closedCafe[i].dataValues.image ? closedCafe[i].dataValues.image.toString() : "/images/baseimg.jpg";
         }
 
-        for(let i=0; i < closedHospitalPositionTotal.length; i++){
+        for(let i=0; i < closedHospital.length; i++){
             closedHospital[i].dataValues.type = 'ch';
             closedHospitall[i].dataValues.isMyPlace = false;
             closedHospital[i].dataValues.image = closedHospital[i].dataValues.image ? closedHospital[i].dataValues.image.toString() : "/images/baseimg.jpg";
