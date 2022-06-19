@@ -30,12 +30,14 @@ exports.showMyplaceList = async(req, res) => {
     myRest = await sequelize.query(`SELECT * FROM Company C JOIN Restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM MyPlace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
     let now = moment().tz("Asia/Seoul").format('Hmm') * 1;
-    let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase;
+    let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase();
 
     myCafe.forEach(c => {
     
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if((now > c.cafeOpen && now < c.cafeClosed) || 
       (c.cafeClosed >=2400 && now+2400 > c.cafeOpen && now+2400 < c.cafeClosed)){
         c['status'] = '영업중'
@@ -65,8 +67,10 @@ exports.showMyplaceList = async(req, res) => {
   
     myRest.forEach(c => {
 
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if(c.breakStart && now >= c.breakStart && now <= c.breakEnd){
         c['status'] = "휴게시간";
       } else if((now > c.restOpen && now < c.restClosed) || 
@@ -139,8 +143,10 @@ exports.showMyplaceList = async(req, res) => {
       }
       
 
-      if(c[today] || c.todayClosed || c.earlyClosed || c.vacation){
+      if(c[today] || c.todayClosed || c.vacation){
         c['status'] = "오늘휴무";
+      } else if(c.earlyClosed){
+        c['status'] = "조기마감";
       } else if(c.breakStart && now >= c.breakStart && now <= c.breakEnd){
         c['status'] = "휴게시간";
       } else if((now > HospOpen && now < HospClosed) || 
@@ -291,7 +297,20 @@ exports.configcomp = async(req, res) => {
 exports.configCafe = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
-  
+
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
     if(req.file){
       imagepath = `/${req.file.filename}`;
     }
@@ -303,9 +322,9 @@ exports.configCafe = async(req, res) => {
       {
         tel:req.body.telNum,
         image:imagepath,
-        todayClosed:Boolean(req.body.todayClosed),
-        earlyClosed:Boolean(req.body.earlyClosed),
-        vacation:Boolean(req.body.vacation),
+        todayClosed:Boolean(todayClosed),
+        earlyClosed:Boolean(earlyClosed),
+        vacation:Boolean(vacation),
         mon:Boolean(req.body.mon),
         tue:Boolean(req.body.tue),
         wed:Boolean(req.body.wed),
@@ -380,6 +399,19 @@ exports.configRest = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
 
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
   if(req.file){
     imagepath = `/${req.file.filename}`;
   }
@@ -390,9 +422,9 @@ exports.configRest = async(req, res) => {
     {
       tel:req.body.telNum,
       image:imagepath,
-      todayClosed:Boolean(req.body.todayClosed),
-      earlyClosed:Boolean(req.body.earlyClosed),
-      vacation:Boolean(req.body.vacation),
+      todayClosed:Boolean(todayClosed),
+      earlyClosed:Boolean(earlyClosed),
+      vacation:Boolean(vacation),
       mon:Boolean(req.body.mon),
       tue:Boolean(req.body.tue),
       wed:Boolean(req.body.wed),
@@ -479,6 +511,19 @@ exports.configHosp = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
 
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
   if(req.file){
     imagepath = `/${req.file.filename}`;
   }
@@ -490,9 +535,9 @@ exports.configHosp = async(req, res) => {
     {
       tel:req.body.telNum,
       image:imagepath,
-      todayClosed:Boolean(req.body.todayClosed),
-      earlyClosed:Boolean(req.body.earlyClosed),
-      vacation:Boolean(req.body.vacation),
+      todayClosed:Boolean(todayClosed),
+      earlyClosed:Boolean(earlyClosed),
+      vacation:Boolean(vacation),
       mon:Boolean(req.body.mon),
       tue:Boolean(req.body.tue),
       wed:Boolean(req.body.wed),
