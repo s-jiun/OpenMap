@@ -291,7 +291,20 @@ exports.configcomp = async(req, res) => {
 exports.configCafe = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
-  
+
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
     if(req.file){
       imagepath = `/${req.file.filename}`;
     }
@@ -303,9 +316,9 @@ exports.configCafe = async(req, res) => {
       {
         tel:req.body.telNum,
         image:imagepath,
-        todayClosed:Boolean(req.body.todayClosed),
-        earlyClosed:Boolean(req.body.earlyClosed),
-        vacation:Boolean(req.body.vacation),
+        todayClosed:Boolean(todayClosed),
+        earlyClosed:Boolean(earlyClosed),
+        vacation:Boolean(vacation),
         mon:Boolean(req.body.mon),
         tue:Boolean(req.body.tue),
         wed:Boolean(req.body.wed),
@@ -380,6 +393,19 @@ exports.configRest = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
 
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
   if(req.file){
     imagepath = `/${req.file.filename}`;
   }
@@ -390,9 +416,9 @@ exports.configRest = async(req, res) => {
     {
       tel:req.body.telNum,
       image:imagepath,
-      todayClosed:Boolean(req.body.todayClosed),
-      earlyClosed:Boolean(req.body.earlyClosed),
-      vacation:Boolean(req.body.vacation),
+      todayClosed:Boolean(todayClosed),
+      earlyClosed:Boolean(earlyClosed),
+      vacation:Boolean(vacation),
       mon:Boolean(req.body.mon),
       tue:Boolean(req.body.tue),
       wed:Boolean(req.body.wed),
@@ -479,6 +505,19 @@ exports.configHosp = async(req, res) => {
   let compId = req.body.comp_id;
   let imagepath;
 
+  let todayClosed = 0;
+  let earlyClosed = 0;
+  let vacation = 0;
+  if(req.body.configClosed == 'todayClosed'){
+    todayClosed = 1;
+  }
+  else if(req.body.configClosed == 'earlyClosed'){
+    earlyClosed = 1;
+  }
+  else if(req.body.configClosed == 'vacation'){
+    vacation = 1;
+  }
+
   if(req.file){
     imagepath = `/${req.file.filename}`;
   }
@@ -490,9 +529,9 @@ exports.configHosp = async(req, res) => {
     {
       tel:req.body.telNum,
       image:imagepath,
-      todayClosed:Boolean(req.body.todayClosed),
-      earlyClosed:Boolean(req.body.earlyClosed),
-      vacation:Boolean(req.body.vacation),
+      todayClosed:Boolean(todayClosed),
+      earlyClosed:Boolean(earlyClosed),
+      vacation:Boolean(vacation),
       mon:Boolean(req.body.mon),
       tue:Boolean(req.body.tue),
       wed:Boolean(req.body.wed),

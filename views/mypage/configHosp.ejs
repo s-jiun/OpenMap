@@ -29,9 +29,10 @@
                         <br>
                         <p>외부사진 혹은 내부사진을 업로드 해주세요.</p>
                     <div class="leave">
-                        <input type='checkbox' name="todayClosed" id="todayClosed" value="true" <% if(myHosp.todayClosed){ %> checked <% } %> />오늘휴무
-                        <input type='checkbox' name="earlyClosed" id="earlyClosed" value="true" <% if(myHosp.earlyClosed){ %> checked <% } %> />조기마감
-                        <input type='checkbox' name="vacation" id="vacation" value="true" <% if(myHosp.vacation){ %> checked <% } %> />단기휴무
+                        <input type='radio' name="configClosed" id="todayClosed" value="todayClosed" <% if(myHosp.todayClosed){ %> checked <% } %> />오늘휴무
+                        <input type='radio' name="configClosed" id="earlyClosed" value="earlyClosed" <% if(myHosp.earlyClosed){ %> checked <% } %> />조기마감
+                        <input type='radio' name="configClosed" id="vacation" value="vacation" <% if(myHosp.vacation){ %> checked <% } %> />단기휴무
+                        <input type='radio' name="configClosed" id="vacation" value="normal" <% if(myCafe.vacation){ %> checked <% } %> />정상영업
                     </div>
                     <br>
                     <div class="closeDay">
