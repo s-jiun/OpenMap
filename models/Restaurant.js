@@ -2,13 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     const Restaurant = sequelize.define(
         "Restaurant",
         {
-            // compId: {
-            //     type: DataTypes.INTEGER,
-            //     primaryKey: true,
-            //     unique: true,
-            //     allowNull: false,
-            //     comment: "업체 번호",
-            // },
 
             restOpen: {
                 type: DataTypes.INTEGER,

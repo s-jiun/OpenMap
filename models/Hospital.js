@@ -2,13 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     const Hospital = sequelize.define(
         "Hospital",
         {
-            // compId: {
-            //     type: DataTypes.INTEGER,
-            //     primaryKey: true,
-            //     unique: true,
-            //     allowNull: false,
-            //     comment: "업체 번호",
-            // },
             HospType: {
                 type: DataTypes.STRING,
                 comment: "병원분류명",

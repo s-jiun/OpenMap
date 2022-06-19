@@ -25,9 +25,9 @@ exports.showMyplaceList = async(req, res) => {
       res.redirect("/users/login");
     }
 
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND CA.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND H.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM myplace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myCafe = await sequelize.query(`SELECT * FROM Company C JOIN Cafe CA ON C.type = 'C' where C.compId in (SELECT CompanyCompId FROM MyPlace where UserId = '${userid}') AND CA.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM Company C JOIN Hospital H ON C.type = 'H' where C.compId in (SELECT CompanyCompId FROM MyPlace where UserId = '${userid}') AND H.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM Company C JOIN Restaurant R ON C.type = 'R' where C.compId in (SELECT CompanyCompId FROM MyPlace where UserId = '${userid}') AND R.CompanyCompId = C.compId`, { type: QueryTypes.SELECT });
   
     let now = moment().tz("Asia/Seoul").format('Hmm') * 1;
     let today = moment().tz("Asia/Seoul").format('ddd').toLowerCase();
@@ -176,7 +176,7 @@ exports.showMyplaceList = async(req, res) => {
 
 exports.deleteMyPlace = async(req, res) => {
   let compId = req.body.comp_id;
-  await sequelize.query(`DELETE FROM myplace WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
+  await sequelize.query(`DELETE FROM MyPlace WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
   res.redirect('/mypage/favorite');
 }
 
@@ -196,7 +196,7 @@ exports.showMypage = async(req, res) => {
     });
     let myComp=[];
     if(Boolean(isOwner.isOwner)){
-      myComp = await sequelize.query(`SELECT * FROM company where userId = '${userid}'`, { type: QueryTypes.SELECT });
+      myComp = await sequelize.query(`SELECT * FROM Company where UserId = '${userid}'`, { type: QueryTypes.SELECT });
       myComp.forEach(c =>{
         c.image = c.image ? c.image : "/images/baseimg.jpg";
       });
@@ -210,7 +210,7 @@ exports.configcomp = async(req, res) => {
   if(req.body.comp_type == 'C'){
     let compId = req.body.comp_id;
 
-    myCafe = await sequelize.query(`SELECT * FROM company C JOIN cafe CA ON C.compid = CA.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myCafe = await sequelize.query(`SELECT * FROM Company C JOIN Cafe CA ON C.compId = CA.CompanyCompId WHERE C.compId=${compId}`, { type: QueryTypes.SELECT });
     myCafe = myCafe[0];
 
     if(myCafe.cafeClosed == 4000){
@@ -228,13 +228,13 @@ exports.configcomp = async(req, res) => {
     myCafe.cafeOpen = moment(`${myCafe.cafeOpen}`,"Hmm").format('HH:mm');
     myCafe.cafeClosed = moment(`${myCafe.cafeClosed}`,"Hmm").format('HH:mm');
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
+    menu = await sequelize.query(`SELECT * FROM Menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
     res.render('mypage/configCafe',{myCafe:myCafe, menu:menu});
 
   } else if(req.body.comp_type == "R") {
     let compId = req.body.comp_id;
 
-    myRest = await sequelize.query(`SELECT * FROM company C JOIN restaurant R ON C.compid = R.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myRest = await sequelize.query(`SELECT * FROM Company C JOIN Restaurant R ON C.compId = R.CompanyCompId WHERE C.compId=${compId}`, { type: QueryTypes.SELECT });
     myRest = myRest[0];
 
     if(myRest.restClosed == 4000){
@@ -257,12 +257,12 @@ exports.configcomp = async(req, res) => {
       myRest.breakEnd = moment(`${myRest.breakEnd}`,"Hmm").format('HH:mm');
     }
     
-    menu = await sequelize.query(`SELECT * FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
+    menu = await sequelize.query(`SELECT * FROM Menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.SELECT });
     res.render('mypage/configRest',{myRest:myRest, menu:menu});
     
   } else if(req.body.comp_type == "H") {
     let compId = req.body.comp_id;
-    myHosp = await sequelize.query(`SELECT * FROM company C JOIN hospital H ON C.compid = H.CompanyCompId WHERE C.compid=${compId}`, { type: QueryTypes.SELECT });
+    myHosp = await sequelize.query(`SELECT * FROM Company C JOIN Hospital H ON C.compId = H.CompanyCompId WHERE C.compId=${compId}`, { type: QueryTypes.SELECT });
     myHosp = myHosp[0];
     
     var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Vac'];
@@ -356,7 +356,7 @@ exports.configCafe = async(req, res) => {
       }}
     );
   
-    await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
+    await sequelize.query(`DELETE FROM Menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
     
  
     if(req.body.menu && !(typeof(req.body.menu)=='string')){
@@ -472,7 +472,7 @@ exports.configRest = async(req, res) => {
     }}
   );
   
-  await sequelize.query(`DELETE FROM menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
+  await sequelize.query(`DELETE FROM Menu WHERE CompanyCompId = '${compId}'`, { type: QueryTypes.DELETE });
 
   if(req.body.menu && !(typeof(req.body.menu)=='string')){
     let menu = Object.values(req.body.menu);
@@ -651,7 +651,7 @@ exports.settingEmail2 = async(req, res) => {
     res.status(500).send(`<script>alert('이미 가입되어있는 이메일입니다.');history.go(-1);</script>`);
     return;
   } else {
-    await sequelize.query(`UPDATE users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
+    await sequelize.query(`UPDATE Users SET email = ? WHERE id = '${userid}'`, {replacements:[`${req.body.new_email}`], type: QueryTypes.UPDATE });
     res.redirect('/mypage');
   }
 }
@@ -689,7 +689,7 @@ exports.leave_thanks = async(req, res) => {
   }
 
   try {
-    await sequelize.query(`DELETE FROM users WHERE id = '${userid}'`, { type: QueryTypes.DELETE });
+    await sequelize.query(`DELETE FROM Users WHERE id = '${userid}'`, { type: QueryTypes.DELETE });
   } catch (e) {
     res.send(e);
   }
@@ -701,6 +701,6 @@ exports.leave_thanks = async(req, res) => {
 
 exports.delete_comp = async(req,res) => {
   let compId = req.body.comp_id;
-  await sequelize.query(`DELETE FROM company WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
+  await sequelize.query(`DELETE FROM Company WHERE compId = '${compId}'`, { type: QueryTypes.DELETE });
   res.redirect('/mypage');
 }
