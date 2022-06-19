@@ -98,6 +98,8 @@ exports.getAllPositions = async (req, res) => {
             todayOpened = await Company.findAll({   // 오늘 정기휴무일이 아닌, 영업하는 업체 확인
                 attributes: ['compId'],
                 where:{
+                    latitude : {[Op.between]: [req.body.swLat, req.body.neLat]},
+                    longitude : {[Op.between]: [req.body.swLng, req.body.neLng]},
                     [Op.and]: [
                         { todayClosed:0},
                         { sun:0 },
